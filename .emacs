@@ -23,7 +23,7 @@
     irony
     company-irony
     company-irony-c-headers
-    helm-rtags
+    ;;helm-rtags
     flycheck-irony
     cmake-ide
     cmake-mode
@@ -32,15 +32,21 @@
     py-autopep8
     ivy
     counsel
-    swiper))
+    swiper
+    undo-tree
+    aggressive-indent
+    expand-region))
 
 (mapc #'(lambda (package)
-    (unless (package-installed-p package)
-      (package-install package)))
+          (unless (package-installed-p package)
+            (package-install package)))
       myPackages)
 
 ;; BASIC CUSTOMIZATION
 ;; --------------------------------------
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq auto-save-default nil)
+
 (require 'use-package)
 (use-package ivy
   :ensure t
@@ -91,7 +97,7 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-(elpy-use-ipython)
+;;(elpy-use-ipython)
 
 
 ;; enable rtags and company mode
@@ -109,8 +115,8 @@
 
 ;;enable Helm
 
-(require 'rtags-helm)
-(setq rtags-use-helm t)
+;;(require 'rtags-helm)
+;;(setq rtags-use-helm t)
 
 
 ;;Source code completition
@@ -173,27 +179,28 @@
 (add-to-list 'load-path
               "~/.emacs.d/plugins/yasnippet")
 (require 'yasnippet)
+(add-to-list 'yas-snippet-dirs "~/git_repos/yasnippet-snippets/")
 (yas-global-mode 1)
-
-(defun shk-yas/helm-prompt (prompt choices &optional display-fn)
-    "Use helm to select a snippet. Put this into `yas-prompt-functions.'"
-    (interactive)
-    (setq display-fn (or display-fn 'identity))
-    (if (require 'helm-config)
-        (let (tmpsource cands result rmap)
-          (setq cands (mapcar (lambda (x) (funcall display-fn x)) choices))
-          (setq rmap (mapcar (lambda (x) (cons (funcall display-fn x) x)) choices))
-          (setq tmpsource
-                (list
-                 (cons 'name prompt)
-                 (cons 'candidates cands)
-                 '(action . (("Expand" . (lambda (selection) selection))))
-                 ))
-          (setq result (helm-other-buffer '(tmpsource) "*helm-select-yasnippet"))
-          (if (null result)
-              (signal 'quit "user quit!")
-            (cdr (assoc result rmap))))
-      nil))
+(yas-reload-all)
+;; (defun shk-yas/helm-prompt (prompt choices &optional display-fn)
+;;     "Use helm to select a snippet. Put this into `yas-prompt-functions.'"
+;;     (interactive)
+;;     (setq display-fn (or display-fn 'identity))
+;;     (if (require 'helm-config)
+;;         (let (tmpsource cands result rmap)
+;;           (setq cands (mapcar (lambda (x) (funcall display-fn x)) choices))
+;;           (setq rmap (mapcar (lambda (x) (cons (funcall display-fn x) x)) choices))
+;;           (setq tmpsource
+;;                 (list
+;;                  (cons 'name prompt)
+;;                  (cons 'candidates cands)
+;;                  '(action . (("Expand" . (lambda (selection) selection))))
+;;                  ))
+;;           (setq result (helm-other-buffer '(tmpsource) "*helm-select-yasnippet"))
+;;           (if (null result)
+;;               (signal 'quit "user quit!")
+;;             (cdr (assoc result rmap))))
+;;       nil))
 
 (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
   (when (featurep 'popup)
@@ -204,7 +211,7 @@
          (or (and display-fn (funcall display-fn choice))
              choice)
          :value choice))
-      choices)nnn
+      choices)
      :prompt prompt
      ;; start isearch mode immediately
      :isearch t
@@ -216,12 +223,12 @@
 (defun yas-ido-expand ()
   "Lets you select (and expand) a yasnippet key"
   (interactive)
-    (let ((original-point (point)))
-      (while (and
-              (not (= (point) (point-min) ))
-              (not
-               (string-match "[[:space:]\n]" (char-to-string (char-before)))))
-        (backward-word 1))
+  (let ((original-point (point)))
+    (while (and
+            (not (= (point) (point-min) ))
+            (not
+             (string-match "[[:space:]\n]" (char-to-string (char-before)))))
+      (backward-word 1))
     (let* ((init-word (point))
            (word (buffer-substring init-word original-point))
            (list (yas-active-keys)))
@@ -245,10 +252,31 @@
     (progn
       (show-smartparens-global-mode t)))
 
-(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
+(add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)
+
+(use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode)
+  (global-set-key (kbd "C-z") 'undo)
+  (defalias 'redo 'undo-tree-redo)
+  (global-set-key (kbd "C-S-z") 'redo))
+
+(use-package expand-region
+  :ensure t
+  :config
+  (global-set-key (kbd "C-=") 'er/expand-region))
+
+(use-package aggressive-indent
+  :ensure t
+  :config
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
 
 (define-key yas-minor-mode-map (kbd "<C-tab>")     'yas-ido-expand)
+(define-key global-map (kbd "C-c o") 'elpy-multiedit)
+
 
 (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
 ;;(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
@@ -258,16 +286,27 @@
 
 ;;(global-set-key (kbd "M-RET") 'company-complete)
 ;;(global-set-key (kbd "TAB") 'company-complete)
-(global-set-key [f5] 'cmake-ide-compile)
+(global-set-key (kbd "C-c m") 'cmake-ide-compile)
 
-
+(defun comment-or-uncomment-region-or-line ()
+  "Comments or uncomments the region or the current line if there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)
+    (next-line)))
+(global-set-key (kbd "C-c c") 'comment-or-uncomment-region-or-line)
 ;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (material-theme better-defaults))))
+ '(package-selected-packages
+   (quote
+    (aggressive-indent expand-region material-theme better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
