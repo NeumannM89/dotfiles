@@ -12,7 +12,11 @@
   (package-refresh-contents))
 
 (defvar myPackages
-  '(better-defaults
+  '(auctex
+    company-auctex
+    company-math
+    cdlatex
+    better-defaults
     use-package
     ein ;; add the ein package (Emacs ipython notebook)
     importmagic
@@ -34,7 +38,8 @@
     counsel
     swiper
     undo-tree
-    aggressive-indent
+    magit
+    ;;    aggressive-indent
     expand-region))
 
 (mapc #'(lambda (package)
@@ -46,6 +51,8 @@
 ;; --------------------------------------
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq auto-save-default nil)
+
+
 
 (require 'use-package)
 (use-package ivy
@@ -268,11 +275,11 @@
   :config
   (global-set-key (kbd "C-=") 'er/expand-region))
 
-(use-package aggressive-indent
-  :ensure t
-  :config
-  (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+;; (use-package aggressive-indent
+;;   :ensure t
+;;   :config
+;;   (global-aggressive-indent-mode 1)
+;;   (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
 
 (define-key yas-minor-mode-map (kbd "<C-tab>")     'yas-ido-expand)
 (define-key global-map (kbd "C-c o") 'elpy-multiedit)
@@ -298,6 +305,85 @@
     (comment-or-uncomment-region beg end)
     (next-line)))
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region-or-line)
+
+
+;; Latex
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq-default TeX-master nil)
+(setq TeX-PDF-mode t)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t
+      reftex-enable-partial-scans t)
+
+
+;; (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
+;; (add-hook 'latex-mode-hook 'turn-on-cdlatex)   ; with Emacs latex mode
+
+
+;; (cond ((fboundp 'global-font-lock-mode)
+;; ;; Turn on font-lock in all modes that support it
+;; (global-font-lock-mode t)
+;; ;; Maximum colors
+;; (setq font-lock-maximum-decoration t)))
+
+(require 'company-auctex)
+(company-auctex-init)
+(add-to-list 'company-backends 'company-math-symbols-unicode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(add-hook 'LaTeX-mode-hook 'flycheck-mode)
+
+(setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
+(setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
+
+;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+;; (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
+
+;; (defun turn-on-outline-minor-mode ()
+;; (outline-minor-mode 1))
+
+;; (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
+;; (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
+;; (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
+
+;; (require 'tex-site)
+;; (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+;; (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
+;; (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+;; (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
+;; (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
+;; ;; (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+;; (setq LaTeX-eqnarray-label "eq"
+;; LaTeX-equation-label "eq"
+;; LaTeX-figure-label "fig"
+;; LaTeX-table-label "tab"
+;; LaTeX-myChapter-label "chap"
+;; TeX-auto-save t
+;; TeX-newline-function 'reindent-then-newline-and-indent
+;; TeX-parse-self t
+;; TeX-style-path
+;; '("style/" "auto/"
+;; "/usr/share/emacs21/site-lisp/auctex/style/"
+;; "/var/lib/auctex/emacs21/"
+;; "/usr/local/share/emacs/site-lisp/auctex/style/")
+;; LaTeX-section-hook
+;; '(LaTeX-section-heading
+;; LaTeX-section-title
+;; LaTeX-section-toc
+;; LaTeX-section-section
+;; LaTeX-section-label))
+
+
 ;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
