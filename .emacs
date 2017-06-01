@@ -13,34 +13,34 @@
 
 (defvar myPackages
   '(auctex
-    company-auctex
-    company-math
-    cdlatex
     better-defaults
-    use-package
-    ein ;; add the ein package (Emacs ipython notebook)
-    importmagic
-    elpy ;; add the elpy package
-    flycheck ;; add the flycheck package
-    material-theme
-    rtags
-    irony
-    company-irony
-    company-irony-c-headers
-    ;;helm-rtags
-    flycheck-irony
+    cdlatex
+    counsel
     cmake-ide
     cmake-mode
-    popup
-    smartparens
-    py-autopep8
+    company
+    company-auctex
+    company-math
+    company-irony
+    company-irony-c-headers
+    company-rtags
+    elpy
+    expand-region
+    flycheck
+    flycheck-irony
+    flycheck-rtags
+    irony
+    importmagic
     ivy
-    counsel
+    material-theme
+    magit
+    popup
+    py-autopep8
+    rtags
+    smartparens
     swiper
     undo-tree
-    magit
-    ;;    aggressive-indent
-    expand-region))
+    use-package))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
