@@ -8,13 +8,15 @@
        '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
-(when (not package-archive-contents)
-  (package-refresh-contents))
 
 (defvar myPackages
-  '(auctex
+  '(async
+    auctex
+    auto-complete
+    ;; autopair
     better-defaults
     cdlatex
+    clang-format    
     counsel
     cmake-ide
     cmake-mode
@@ -24,23 +26,51 @@
     company-irony
     company-irony-c-headers
     company-rtags
+    dash 
+    epl
     elpy
     expand-region
     flycheck
     flycheck-irony
     flycheck-rtags
+    flycheck-pyflakes
+    google-c-style
+    helm helm-core 
+    helm-ctest
+    helm-flycheck
+    helm-flyspell 
+    helm-ls-git 
+    helm-ls-hg
+    hungry-delete
     irony
     importmagic
     ivy
+    let-alist
+    levenshtein 
     material-theme
     magit
+    markdown-mode 
+    pkg-info    
     popup
     py-autopep8
     rtags
+    seq
     smartparens
     swiper
     undo-tree
-    use-package))
+    use-package
+    vlf 
+    web-mode
+    window-numbering
+    writegood-mode 
+    yasnippet))
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -51,8 +81,14 @@
 ;; --------------------------------------
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq auto-save-default nil)
-
-
+(custom-set-variables
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-startup-message t) ;; hide the startup message
+(load-theme 'material t) ;; load material theme
+(global-linum-mode t) ;; enable line numbers globally
 
 (require 'use-package)
 (use-package ivy
@@ -75,180 +111,6 @@
     (setq ivy-display-style 'fancy)
     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
     ))
-
-(setq inhibit-startup-message t) ;; hide the startup message
-(load-theme 'material t) ;; load material theme
-(global-linum-mode t) ;; enable line numbers globally
-(elpy-enable)
-
-;;(use-package importmagic
-;;    :ensure t
-;;    :config
-;;    (add-hook 'python-mode-hook 'importmagic-mode))
-
-(setq auto-mode-alist
-      (append
-       '(("CMakeLists\\.txt\\'" . cmake-mode))
-       '(("\\.cmake\\'" . cmake-mode))
-       auto-mode-alist))
-(autoload 'cmake-mode "/usr/share/cmake-3.8/editors/emacs/cmake-mode.el" t)
-
-(require 'ido)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode t)
-(defalias 'list-buffers 'ibuffer-other-window)
-
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-(require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-;;(elpy-use-ipython)
-
-
-;; enable rtags and company mode
-
-
-(require 'rtags)
-(require 'company-rtags)
-
-(setq rtags-completions-enabled t)
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends 'company-rtags))
-(setq rtags-autostart-diagnostics t)
-(rtags-enable-standard-keybindings)
-
-;;enable Helm
-
-;;(require 'rtags-helm)
-;;(setq rtags-use-helm t)
-
-
-;;Source code completition
-
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-
-(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
-(setq company-backends (delete 'company-semantic company-backends))
-;;(eval-after-load 'company
-;;  '(add-to-list
-;;    'company-backends 'company-irony))
-
-(add-hook 'after-init-hook 'global-company-mode)
-
-(require 'company-irony-c-headers)
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends '(company-irony-c-headers company-irony)))
-
-(setq company-idle-delay 0)
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
-
-;; flycheck
-
-(add-hook 'c++-mode-hook 'flycheck-mode)
-(add-hook 'c-mode-hook 'flycheck-mode)
-
-(require 'flycheck-rtags)
-
-(defun my-flycheck-rtags-setup ()
-  (flycheck-select-checker 'rtags)
-  (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-  (setq-local flycheck-check-syntax-automatically nil))
-;; c-mode-common-hook is also called by c++-mode
-(add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
-
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-;; cmake
-
-
-(cmake-ide-setup)
-
-;;; use popup menu for yas-choose-value
-(require 'popup)
-(add-to-list 'load-path
-              "~/.emacs.d/plugins/yasnippet")
-(require 'yasnippet)
-(add-to-list 'yas-snippet-dirs "~/git_repos/yasnippet-snippets/")
-(yas-global-mode 1)
-(yas-reload-all)
-;; (defun shk-yas/helm-prompt (prompt choices &optional display-fn)
-;;     "Use helm to select a snippet. Put this into `yas-prompt-functions.'"
-;;     (interactive)
-;;     (setq display-fn (or display-fn 'identity))
-;;     (if (require 'helm-config)
-;;         (let (tmpsource cands result rmap)
-;;           (setq cands (mapcar (lambda (x) (funcall display-fn x)) choices))
-;;           (setq rmap (mapcar (lambda (x) (cons (funcall display-fn x) x)) choices))
-;;           (setq tmpsource
-;;                 (list
-;;                  (cons 'name prompt)
-;;                  (cons 'candidates cands)
-;;                  '(action . (("Expand" . (lambda (selection) selection))))
-;;                  ))
-;;           (setq result (helm-other-buffer '(tmpsource) "*helm-select-yasnippet"))
-;;           (if (null result)
-;;               (signal 'quit "user quit!")
-;;             (cdr (assoc result rmap))))
-;;       nil))
-
-(defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-  (when (featurep 'popup)
-    (popup-menu*
-     (mapcar
-      (lambda (choice)
-        (popup-make-item
-         (or (and display-fn (funcall display-fn choice))
-             choice)
-         :value choice))
-      choices)
-     :prompt prompt
-     ;; start isearch mode immediately
-     :isearch t
-     )))
-
-(setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))
-
-;; Completing point by some yasnippet key
-(defun yas-ido-expand ()
-  "Lets you select (and expand) a yasnippet key"
-  (interactive)
-  (let ((original-point (point)))
-    (while (and
-            (not (= (point) (point-min) ))
-            (not
-             (string-match "[[:space:]\n]" (char-to-string (char-before)))))
-      (backward-word 1))
-    (let* ((init-word (point))
-           (word (buffer-substring init-word original-point))
-           (list (yas-active-keys)))
-      (goto-char original-point)
-      (let ((key (remove-if-not
-                  (lambda (s) (string-match (concat "^" word) s)) list)))
-        (if (= (length key) 1)
-            (setq key (pop key))
-          (setq key (ido-completing-read "key: " list nil nil word)))
-        (delete-char (- init-word original-point))
-        (insert key)
-        (yas-expand)))))
-
 
 
 (require 'smartparens-config)
@@ -275,25 +137,22 @@
   :config
   (global-set-key (kbd "C-=") 'er/expand-region))
 
-;; (use-package aggressive-indent
-;;   :ensure t
-;;   :config
-;;   (global-aggressive-indent-mode 1)
-;;   (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
 
-(define-key yas-minor-mode-map (kbd "<C-tab>")     'yas-ido-expand)
-(define-key global-map (kbd "C-c o") 'elpy-multiedit)
+(require 'ido)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode t)
+(defalias 'list-buffers 'ibuffer-other-window)
 
 
-(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
-;;(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-;; (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
-;; (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
-(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+(require 'yasnippet)
+(add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets/")
+(yas-global-mode 1)
+(yas-reload-all)
 
-;;(global-set-key (kbd "M-RET") 'company-complete)
-;;(global-set-key (kbd "TAB") 'company-complete)
-(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+(require 'popup)
+(add-to-list 'load-path
+              "~/.emacs.d/plugins/yasnippet")
 
 (defun comment-or-uncomment-region-or-line ()
   "Comments or uncomments the region or the current line if there's no active region."
@@ -305,6 +164,278 @@
     (comment-or-uncomment-region beg end)
     (next-line)))
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region-or-line)
+
+
+
+
+;; 
+;;
+;;   Python
+;;
+
+(elpy-enable)
+
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;;(elpy-use-ipython)
+
+
+
+
+;;
+;;
+;;   CMake
+;;
+;;
+
+(setq auto-mode-alist
+      (append
+       '(("CMakeLists\\.txt\\'" . cmake-mode))
+       '(("\\.cmake\\'" . cmake-mode))
+       auto-mode-alist))
+(autoload 'cmake-mode "/usr/share/cmake-3.8/editors/emacs/cmake-mode.el" t)
+
+
+;;
+;;
+;;   CPP
+;;
+;;
+
+
+;; Require flycheck to be present
+(require 'flycheck)
+;; Force flycheck to always use c++11 support. We use
+;; the clang language backend so this is set to clang
+(add-hook 'c++-mode-hook
+          (lambda () (setq flycheck-clang-language-standard "c++11")))
+;; Turn flycheck on everywhere
+(global-flycheck-mode)
+
+;; Use flycheck-pyflakes for python. Seems to work a little better.
+(require 'flycheck-pyflakes)
+
+
+(require 'rtags)
+
+;; (require 'cmake-ide)
+;; (cmake-ide-setup)
+;; (setq cmake-ide-flags-c++ (append '("-std=c++11")))
+;; We want to be able to compile with a keyboard shortcut
+
+(setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+(setq rtags-completions-enabled t)
+(rtags-enable-standard-keybindings)
+
+
+;; clang-format can be triggered using C-M-tab
+(require 'clang-format)
+(global-set-key [C-M-tab] 'clang-format-region)
+;; Create clang-format file using google style
+;; clang-format -style=google -dump-config > .clang-format
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Set up helm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Load helm and set M-x to helm, buffer to helm, and find files to herm
+(require 'helm-config)
+(require 'helm)
+(require 'helm-ls-git)
+(require 'helm-ctest)
+;; Use C-c h for helm instead of C-x c
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; (global-set-key (kbd "C-x b") 'helm-mini)
+;; (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-c t") 'helm-ctest)
+(setq
+ helm-split-window-in-side-p           t
+   ; open helm buffer inside current window,
+   ; not occupy whole other window
+ helm-move-to-line-cycle-in-source     t
+   ; move to end or beginning of source when
+   ; reaching top or bottom of source.
+ helm-ff-search-library-in-sexp        t
+   ; search for library in `require' and `declare-function' sexp.
+ helm-scroll-amount                    8
+   ; scroll 8 lines other window using M-<next>/M-<prior>
+ helm-ff-file-name-history-use-recentf t
+ ;; Allow fuzzy matches in helm semantic
+ helm-semantic-fuzzy-match t
+ helm-imenu-fuzzy-match    t)
+;; Have helm automaticaly resize the window
+(helm-autoresize-mode 1)
+(setq rtags-use-helm t)
+(require 'helm-flycheck) ;; Not necessary if using ELPA package
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+
+
+
+
+
+
+
+(require 'company)
+(require 'company-rtags)
+(global-company-mode)
+
+;; Enable semantics mode for auto-completion
+(require 'cc-mode)
+(require 'semantic)
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+(semantic-mode 1)
+
+;; Setup irony-mode to load in c-modes
+(require 'irony)
+(require 'company-irony-c-headers)
+(require 'cl)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+
+;; irony-mode hook that is called when irony is triggered
+(defun my-irony-mode-hook ()
+  "Custom irony mode hook to remap keys."
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+(setq company-backends (delete 'company-semantic company-backends))
+
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends '(company-irony-c-headers
+                        company-irony company-yasnippet
+                        company-clang company-rtags)
+    )
+  )
+
+(defun my-disable-semantic ()
+  "Disable the company-semantic backend."
+  (interactive)
+  (setq company-backends (delete '(company-irony-c-headers
+                                   company-irony company-yasnippet
+                                   company-clang company-rtags
+                                   company-semantic) company-backends))
+  (add-to-list
+   'company-backends '(company-irony-c-headers
+                       company-irony company-yasnippet
+                       company-clang company-rtags))
+  )
+(defun my-enable-semantic ()
+  "Enable the company-semantic backend."
+  (interactive)
+  (setq company-backends (delete '(company-irony-c-headers
+                                   company-irony company-yasnippet
+                                   company-clang) company-backends))
+  (add-to-list
+   'company-backends '(company-irony-c-headers
+                       company-irony company-yasnippet company-clang))
+  )
+
+
+;; Zero delay when pressing tab
+(setq company-idle-delay 0)
+(define-key c-mode-map [(tab)] 'company-complete)
+(define-key c++-mode-map [(tab)] 'company-complete)
+;; Delay when idle because I want to be able to think
+(setq company-idle-delay 0.2)
+
+;; Prohibit semantic from searching through system headers. We want
+;; company-clang to do that for us.
+(setq-mode-local c-mode semanticdb-find-default-throttle
+                 '(local project unloaded recursive))
+(setq-mode-local c++-mode semanticdb-find-default-throttle
+                 '(local project unloaded recursive))
+
+(semantic-remove-system-include "/usr/include/" 'c++-mode)
+(semantic-remove-system-include "/usr/local/include/" 'c++-mode)
+(add-hook 'semantic-init-hooks
+          'semantic-reset-system-include)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Flyspell Mode for Spelling Corrections
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'flyspell)
+;; The welcome message is useless and can cause problems
+(setq flyspell-issue-welcome-flag nil)
+;; Fly spell keyboard shortcuts so no mouse is needed
+;; Use helm with flyspell
+(define-key flyspell-mode-map (kbd "<f8>") 'helm-flyspell-correct)
+;; (global-set-key (kbd "<f8>") 'ispell-word)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+;; Set the way word highlighting is done
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word."
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word)
+  )
+
+;; Spell check comments in c++ and c common
+(add-hook 'c++-mode-hook  'flyspell-prog-mode)
+(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+
+;; Enable flyspell in text mode
+(if (fboundp 'prog-mode)
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (dolist (hook '(lisp-mode-hook emacs-lisp-mode-hook scheme-mode-hook
+                  clojure-mode-hook ruby-mode-hook yaml-mode
+                  python-mode-hook shell-mode-hook php-mode-hook
+                  css-mode-hook haskell-mode-hook caml-mode-hook
+                  nxml-mode-hook crontab-mode-hook perl-mode-hook
+                  tcl-mode-hook javascript-mode-hook))
+    (add-hook hook 'flyspell-prog-mode)))
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+
+(require 'cmake-mode)
+
+
+;; (require 'autopair)
+;; (autopair-global-mode)
+
+(require 'hungry-delete)
+(global-hungry-delete-mode)
+
+
+(global-set-key (kbd "M-g M-s") 'magit-status)
+(global-set-key (kbd "M-g M-c") 'magit-checkout)
+;; (define-key yas-minor-mode-map (kbd "<C-tab>")     'yas-ido-expand)
+(define-key global-map (kbd "C-c o") 'elpy-multiedit)
+;; (global-set-key (kbd "C-c m") 'cmake-ide-compile)
+
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+;;(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+;; (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+;; (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+;;(global-set-key (kbd "M-RET") 'company-complete)
+;;(global-set-key (kbd "TAB") 'company-complete)
+
 
 
 ;; Latex
@@ -324,15 +455,7 @@
       reftex-enable-partial-scans t)
 
 
-;; (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
-;; (add-hook 'latex-mode-hook 'turn-on-cdlatex)   ; with Emacs latex mode
 
-
-;; (cond ((fboundp 'global-font-lock-mode)
-;; ;; Turn on font-lock in all modes that support it
-;; (global-font-lock-mode t)
-;; ;; Maximum colors
-;; (setq font-lock-maximum-decoration t)))
 
 (require 'company-auctex)
 (company-auctex-init)
@@ -344,45 +467,6 @@
 (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
 (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
 
-;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;; (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
-
-;; (defun turn-on-outline-minor-mode ()
-;; (outline-minor-mode 1))
-
-;; (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
-;; (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
-;; (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
-
-;; (require 'tex-site)
-;; (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
-;; (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
-;; (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
-;; (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
-;; (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
-;; ;; (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
-;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-
-;; (setq LaTeX-eqnarray-label "eq"
-;; LaTeX-equation-label "eq"
-;; LaTeX-figure-label "fig"
-;; LaTeX-table-label "tab"
-;; LaTeX-myChapter-label "chap"
-;; TeX-auto-save t
-;; TeX-newline-function 'reindent-then-newline-and-indent
-;; TeX-parse-self t
-;; TeX-style-path
-;; '("style/" "auto/"
-;; "/usr/share/emacs21/site-lisp/auctex/style/"
-;; "/var/lib/auctex/emacs21/"
-;; "/usr/local/share/emacs/site-lisp/auctex/style/")
-;; LaTeX-section-hook
-;; '(LaTeX-section-heading
-;; LaTeX-section-title
-;; LaTeX-section-toc
-;; LaTeX-section-section
-;; LaTeX-section-label))
-
 
 ;; init.el ends here
 (custom-set-variables
@@ -392,7 +476,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (aggressive-indent expand-region material-theme better-defaults))))
+    (expand-region material-theme better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
