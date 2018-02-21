@@ -8,18 +8,20 @@ set nowritebackup
 set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
 set history=50
 set ruler         " show the cursor position all the time
-set showcmd       " display incomplete command
+"set showcmd       " display incomplete command
 set laststatus=2  " Always display the status line
 set autowrite     " Automatically :write before running commands
 set autoread      " Reload files changed outside vim
 " Trigger autoread when changing buffers or coming back to vim in terminal.
 au FocusGained,BufEnter * :silent! !
 "Set default font in mac vim and gvim
-set guifont=Inconsolata\ for\ Powerline:h24
+"set guifont=Inconsolata\ for\ Powerline:h24
 set cursorline    " highlight the current line
 set visualbell    " stop that ANNOYING beeping
 set wildmenu
 set wildmode=list:longest,full
+set wildignorecase
+
 
 "Allow usage of mouse in iTerm
 set ttyfast
@@ -36,16 +38,17 @@ set incsearch
 set showmatch
 
 " Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set shiftround
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+" set shiftround
 set expandtab
 
 " Display extra whitespace
 set list listchars=tab:»·,trail:·,nbsp:·
 
 " Make it obvious where 100 characters is
-set textwidth=100
+"set textwidth=100
 " set formatoptions=cq
 set formatoptions=qrn1
 set wrapmargin=0
@@ -69,12 +72,15 @@ set matchpairs+=<:>
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
-
+set cindent "enable c indentation
+set cinoptions=g-1
 " ================ Scrolling ========================
 
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
+
+set path+=**
 
 "Toggle relative numbering, and set to absolute on loss of focus or insert mode
 set rnu
@@ -96,6 +102,8 @@ nnoremap <CR> o<Esc>
 "Below is to fix issues with the ABOVE mappings in quickfix window
 autocmd CmdwinEnter * nnoremap <CR> <CR>
 autocmd BufReadPost quickfix nnoremap <CR> <CR>
+
+autocmd BufWritePre * %s/\s\+$//e
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -175,7 +183,7 @@ au FocusLost,WinLeave * :silent! wa
 autocmd VimResized * :wincmd =
 
 "update dir to current file
-autocmd BufEnter * silent! cd %:p:h
+" autocmd BufEnter * silent! cd %:p:h
 
 augroup vimrcEx
   autocmd!
@@ -224,18 +232,22 @@ augroup END
 " Color scheme
 syntax enable
 " let g:solarized_termcolors=16
-let g:colarized_termtrans = 1
-let g:solarized_termcolors=256
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-colorscheme solarized
+"let g:colarized_termtrans = 1
+"let g:solarized_termcolors=256
+"let g:solarized_visibility = "high"
+"let g:solarized_contrast = "high"
+
+colorscheme molokai
 "colorscheme VisualStudioDark
-set background=dark
+"set background=dark
 " Allow powerline symbols to show up
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+" Just show the filename (no path) in the tab
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#buffer_nr_show = 1
 
 
-" [2]
 map <silent> <C-n> :NERDTreeToggle<cr>
 nnoremap <C-t> :call ToggleRelativeOn()<cr>
 " Close vim if only NERDTree is open
@@ -259,14 +271,14 @@ if executable('ag')
   " Use Ag over Grep
   set grepprg=ag\ --nogroup\ --nocolor
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  let g:ctrlp_working_path_mode = 'r'
+  " Use ag i               trlP for listing files. Lightning fast and respects .gitignore
+  "let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  "let g:ctrlp_working_path_mode = 'r'
 
   " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+  "let g:ctrlp_use_caching = 0
 
-  let g:ctrlp_extensions = ['line']
+  "let g:ctrlp_extensions = ['line']
 endif
 
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
@@ -291,11 +303,33 @@ let g:javascript_enable_domhtmlcss = 1
 let g:jsx_ext_required = 0
 
 " [6] Key mapping for Cosco.vim - space + ; to add semicolon or comma in Javascript or CSS
-autocmd FileType javascript,css nnoremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
-autocmd FileType javascript,css inoremap <silent> <Leader>; <c-o>:call cosco#commaOrSemiColon()<CR>
+" autocmd FileType javascript,css nnoremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
+" autocmd FileType javascript,css inoremap <silent> <Leader>; <c-o>:call cosco#commaOrSemiColon()<CR>
+
+inoremap <silent><leader>; <Esc>A;<Esc>
+nnoremap <silent><leader>; A;<Esc>
 
 
 
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsEditSplit="vertical"
 
 
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
+let g:deoplete#enable_at_startup = 1
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" omnifuncs
+augroup omnifuncs
+  autocmd!
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+augroup end
