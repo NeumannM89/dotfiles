@@ -1,7 +1,7 @@
 set nocompatible
 " Leader - ( Spacebar )
 let mapleader = " "
-
+" set t_Co = 256
 set backspace=2   " Backspace deletes like most programs in insert mode
 set nobackup
 set nowritebackup
@@ -246,7 +246,7 @@ let g:airline#extensions#tabline#enabled = 1
 " Just show the filename (no path) in the tab
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
-
+set statusline=%t
 
 map <silent> <C-n> :NERDTreeToggle<cr>
 nnoremap <C-t> :call ToggleRelativeOn()<cr>
