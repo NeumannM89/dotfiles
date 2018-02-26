@@ -183,7 +183,7 @@ au FocusLost,WinLeave * :silent! wa
 autocmd VimResized * :wincmd =
 
 "update dir to current file
-" autocmd BufEnter * silent! cd %:p:h
+autocmd BufEnter * silent! cd %:p:h
 
 augroup vimrcEx
   autocmd!
@@ -309,7 +309,10 @@ let g:jsx_ext_required = 0
 inoremap <silent><leader>; <Esc>A;<Esc>
 nnoremap <silent><leader>; A;<Esc>
 
-
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
