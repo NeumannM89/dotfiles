@@ -188,6 +188,7 @@ autocmd BufEnter * silent! cd %:p:h
 augroup vimrcEx
   autocmd!
 
+
   " When editing a file, always jump to the last known cursor position.
   " Don't do it for commit messages, when the position is invalid, or when
   " inside an event handler (happens when dropping a file on gvim).
@@ -202,6 +203,7 @@ augroup vimrcEx
   " autocmd BufRead *.jsx set ft=jsx.html
   " autocmd BufNewFile *.jsx set ft=jsx.html
 
+
   " Enable spellchecking for Markdown
   autocmd FileType markdown setlocal spell
 
@@ -211,7 +213,7 @@ augroup vimrcEx
   " Automatically wrap at 100 characters and spell check git commit messages
   autocmd FileType gitcommit setlocal textwidth=100
   autocmd FileType gitcommit setlocal spell
-
+  autocmd FileType latex setlocal spell
   " Allow stylesheets to autocomplete hyphenated words
   autocmd FileType css,scss,sass,less setlocal iskeyword+=-
 augroup END
@@ -336,3 +338,5 @@ augroup omnifuncs
   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 augroup end
+
+":w | %bd | e#
