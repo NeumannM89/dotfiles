@@ -12,10 +12,12 @@ endif
 set t_Co=256
 source ~/dotfiles/packages.vim
 
-colorscheme sorcerer
+" let g:molokai_original = 1
+colorscheme molokai
 
 set showcmd       " display incomplete command
 
+set nocompatible
 set history=50
 set nobackup
 set nowritebackup
@@ -42,6 +44,7 @@ set showmatch
 set visualbell    " stop that ANNOYING beeping
 set wildmenu
 set wildignore=*.o,*~,*.pyc,*.aux,*.gz,*.zip,*.pdf
+set wildignorecase
 
 set tabstop=4
 set shiftwidth=4
@@ -74,9 +77,15 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
+set statusline=%t
 
+let g:ycm_global_ycm_extra_conf = '$HOME/.vim/pack/minpac/start/YouCompleteMe/.ycm_extra_conf.py'
+let g:ycm_auto_trigger = 1
+let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_autoclose_preview_window_after_insertion = 1
 
-nnoremap <silent> <leader>, :noh<cr> " Stop highlight after searching
+nnoremap <silent> <leader>/ :noh<cr> " Stop highlight after searching
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -140,11 +149,14 @@ function! ToggleRelativeOn()
 	autocmd InsertEnter * call ToggleRelativeOn()
 autocmd InsertLeave * call ToggleRelativeOn()
 
+" Trigger autoread when changing buffers or coming back to vim in terminal.
+au FocusGained,BufEnter * :silent! !
 " Save whenever switching windows or leaving vim. This is useful when running
 " the tests inside vim without having to save all files first.
 au FocusLost,WinLeave * :silent! wa
 
-" au BufNewFile,BufRead *.py
+au BufNewFile,BufRead *.py
+			\let g:pymode = 1
 "     \ set tabstop=4
 "     \ set softtabstop=4
 "     \ set shiftwidth=4
