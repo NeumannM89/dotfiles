@@ -1,7 +1,8 @@
  "vim: nowrap fdm=marker
 scriptencoding utf-8
 syntax on
-filetype plugin indent on
+" filetype plugin indent on
+filetype plugin on
 
 if !has('nvim')
   unlet! skip_defaults_vim
@@ -157,6 +158,8 @@ au FocusLost,WinLeave * :silent! wa
 
 au BufNewFile,BufRead *.py
 			\let g:pymode = 1
+
+autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 "     \ set tabstop=4
 "     \ set softtabstop=4
 "     \ set shiftwidth=4
