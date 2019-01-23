@@ -2,7 +2,9 @@
 scriptencoding utf-8
 syntax on
 " filetype plugin indent on
+filetype on
 filetype plugin on
+filetype indent on
 
 if !has('nvim')
   unlet! skip_defaults_vim
@@ -34,11 +36,15 @@ set hidden
 set ttyfast
 set mouse=a
 
+" make command line one line high
+set ch=1
+
 " Make searching better
 set gdefault      " Never have to type /g at the end of search / replace again
 set ignorecase    " case insensitive searching (unless specified)
 set smartcase
-set hlsearch
+" set hlsearch
+set nohlsearch
 set incsearch
 set showmatch
 
@@ -80,11 +86,11 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
 set statusline=%t
 
-let g:ycm_global_ycm_extra_conf = '$HOME/.vim/pack/minpac/start/YouCompleteMe/.ycm_extra_conf.py'
-let g:ycm_auto_trigger = 1
-let g:ycm_min_num_of_chars_for_completion = 3
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
+" let g:ycm_global_ycm_extra_conf = '$HOME/.vim/pack/minpac/start/YouCompleteMe/.ycm_extra_conf.py'
+" let g:ycm_auto_trigger = 1
+" let g:ycm_min_num_of_chars_for_completion = 3
+" let g:ycm_confirm_extra_conf = 0
+" let g:ycm_autoclose_preview_window_after_insertion = 1
 
 nnoremap <silent> <leader>/ :noh<cr> " Stop highlight after searching
 
@@ -159,7 +165,7 @@ au FocusLost,WinLeave * :silent! wa
 au BufNewFile,BufRead *.py
 			\let g:pymode = 1
 
-autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
+" autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 "     \ set tabstop=4
 "     \ set softtabstop=4
 "     \ set shiftwidth=4
