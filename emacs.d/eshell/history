@@ -1,0 +1,14 @@
+ll
+l
+..
+l
+git st
+..
+cd -
+l
+..
+ll
+l
+cd work/aidocs/src/conferences/
+l
+mkdir 19-IROS-URoboSim

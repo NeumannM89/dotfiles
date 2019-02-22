@@ -1,0 +1,2 @@
+"93c6dbf138a073c9701335075ba4b1dd80a85000"
+[cl-struct-undo-tree [nil ([nil (#1=[nil nil ((#(" " 0 1 (fontified t)) . 2385)) nil (23662 26548 275827 812000) 0 nil]) ((#("text-mode" 0 4 (fontified t) 4 9 (fontified t)) . 2385) (t 23645 28662 183989 153000)) nil (23662 26548 275832 526000) 0 nil] [nil nil ((#("text" 0 4 (fontified t face (highlight-symbol-face))) . 2385) (t 23645 28662 183989 153000)) ((2385 . 2389)) (23662 26542 949638 482000) 0 nil]) nil nil (23662 26542 950064 407000) 0 nil] #1# 62 3 nil]

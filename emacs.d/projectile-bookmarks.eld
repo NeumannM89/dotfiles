@@ -1,0 +1,1 @@
+("~/work/USB_Backup/18-IROS-workshop-robot-simulator/" "~/dotfiles/" "~/work/aidocs/")

@@ -1,5 +1,6 @@
  "vim: nowrap fdm=marker
 scriptencoding utf-8
+
 syntax on
 " filetype plugin indent on
 filetype on
@@ -31,7 +32,7 @@ set foldlevelstart=20
 
 " Mark buffers ashidden without asking
 set hidden
-
+let python_highlight_all=1
 "Allow usage of mouse in iTerm
 set ttyfast
 set mouse=a
@@ -66,7 +67,7 @@ set ruler
 set autoread      " Reload files changed outside vim
 
 " make tab as tab
-set noexpandtab
+set expandtab
 
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 
@@ -86,11 +87,16 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
 set statusline=%t
 
-" let g:ycm_global_ycm_extra_conf = '$HOME/.vim/pack/minpac/start/YouCompleteMe/.ycm_extra_conf.py'
-" let g:ycm_auto_trigger = 1
-" let g:ycm_min_num_of_chars_for_completion = 3
-" let g:ycm_confirm_extra_conf = 0
-" let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_global_ycm_extra_conf = '$HOME/.vim/pack/minpac/start/YouCompleteMe/.ycm_extra_conf.py'
+let g:ycm_auto_trigger = 1
+let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+let g:ycm_semantic_triggers = {
+\   'roslaunch' : ['="', '$(', '/'],
+\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
+\ }
 
 nnoremap <silent> <leader>/ :noh<cr> " Stop highlight after searching
 
@@ -162,19 +168,19 @@ au FocusGained,BufEnter * :silent! !
 " the tests inside vim without having to save all files first.
 au FocusLost,WinLeave * :silent! wa
 
-au BufNewFile,BufRead *.py
-			\let g:pymode = 1
+" au BufNewFile,BufRead *.py
+" 			\let g:pymode = 1
 
 " autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
-"     \ set tabstop=4
-"     \ set softtabstop=4
-"     \ set shiftwidth=4
-"     \ set textwidth=79
-"     \ set expandtab
-"     \ set autoindent
-"     \ set fileformat=unix
+"     \set tabstop=4
+"     \set softtabstop=4
+"     \set shiftwidth=4
+"     \set textwidth=79
+"     \set expandtab
+"     \set autoindent
+"     \set fileformat=unix
 "
 " au BufNewFile,BufRead *.js, *.html, *.css
-"     \ set tabstop=2
-"     \ set softtabstop=2
-"     \ set shiftwidth=2
+"     \set tabstop=2
+"     \set softtabstop=2
+"     \set shiftwidth=2
