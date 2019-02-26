@@ -454,6 +454,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :config
   (projectile-mode)
   (setq projectile-enable-caching t)
+  (setq projectile-indexing-method 'native)
   (setq projectile-mode-line
         '(:eval
           (format " Proj[%s]"
@@ -687,7 +688,7 @@ The IGNORED argument is... Ignored."
   (setq ns-use-srgb-colorspace nil))
 
 (load-theme 'sanityinc-tomorrow-night)
-(load-theme 'sanityinc-tomorrow-night-overrides)
+;; (load-theme 'sanityinc-tomorrow-night-overrides)
 
 (use-package smart-mode-line
   :ensure t

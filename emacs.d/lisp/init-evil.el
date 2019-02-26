@@ -33,6 +33,7 @@
     "x"  'helm-M-x
     "y"  'yank-to-x-clipboard
     "hl"  'helm-locate
+    "ho"  'helm-projectile-find-other-file
     "le"  'LaTeX-environment
     "ls"  'LaTeX-section
     ;; "ci" 'evilnc-comment-or-uncomment-lines

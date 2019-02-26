@@ -1,1 +1,1 @@
-("~/work/USB_Backup/18-IROS-workshop-robot-simulator/" "~/dotfiles/" "~/work/aidocs/")
+("~/dotfiles/" "~/work/development/RobCoG-URoboSim/Plugins/URoboSim/" "~/work/development/URoboSim/" "~/work/development/RobCoG-URoboSim/" "~/work/development/URoboSim/Source/URoboSim/" "~/work/development/RobCoG-URoboSim/Plugins/URoboVision/" "~/work/development/PR2UnrealSimulator/src/unreal_simulator_demo/" "~/work/aidocs/" "~/work/USB_Backup/18-IROS-workshop-robot-simulator/")
