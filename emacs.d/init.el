@@ -29,6 +29,8 @@
 (add-to-list 'exec-path "/usr/local/bin")
 (add-to-list 'exec-path "/usr/bin")
 
+(add-to-list 'load-path "/opt/ros/melodic/share/emacs/site-lisp")
+
 ;; Don't litter my init file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
@@ -722,6 +724,13 @@ The IGNORED argument is... Ignored."
   ;;   :ensure t)
   )
 
+(require 'rosemacs-config)
+
+(use-package helm-ros
+  :defer t
+  :ensure t
+  :config
+  (global-helm-ros-mode t))
 
 
 (provide 'init)
