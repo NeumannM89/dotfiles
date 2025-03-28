@@ -108,7 +108,7 @@
 
 ;;; My own configurations, which are bundled in my dotfiles.
 ; (require 'init-platform)
-(require 'init-global-functions)
+;;(require 'init-global-functions)
 
 ;; Required by init-maps, so it appears up here.
 (use-package tiny-menu
@@ -160,7 +160,7 @@
 ;;(require 'init-w3m)
 ;;(require 'init-php)
 (require 'init-flycheck)
-(require 'init-tmux)
+;; (require 'init-tmux)
 ;
 ; ;;(add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 ; ;;(require 'fence-edit)
@@ -174,23 +174,23 @@
 (use-package visual-fill-column :ensure t)
 
 ;; Org Mode
-(add-to-list 'load-path (expand-file-name "periodic-commit-minor-mode" user-emacs-directory))
-(require 'init-org)
+;; (add-to-list 'load-path (expand-file-name "periodic-commit-minor-mode" user-emacs-directory))
+;; (require 'init-org)
 
-;; Just while I'm working on it.
-(add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
-(use-package octopress
-  :ensure t
-  :commands (octopress-status octopress-mode)
-  :config
-  (require 'markdown-mode)
-  (add-hook 'markdown-mode-hook
-            (lambda ()
-              (define-key markdown-mode-map (kbd "C-c o i") 'octopress-isolate)
-              (define-key markdown-mode-map (kbd "C-c o I") 'octopress-integrate)
-              (define-key markdown-mode-map (kbd "C-c o p") 'octopress-insert-post-url)
-              (define-key markdown-mode-map (kbd "C-c o m") 'octopress-insert-image-url)
-              (define-key markdown-mode-map (kbd "C-c o b") 'octopress-browse))))
+;; ;; Just while I'm working on it.
+;; (add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
+;; (use-package octopress
+;;   :ensure t
+;;   :commands (octopress-status octopress-mode)
+;;   :config
+;;   (require 'markdown-mode)
+;;   (add-hook 'markdown-mode-hook
+;;             (lambda ()
+;;               (define-key markdown-mode-map (kbd "C-c o i") 'octopress-isolate)
+;;               (define-key markdown-mode-map (kbd "C-c o I") 'octopress-integrate)
+;;               (define-key markdown-mode-map (kbd "C-c o p") 'octopress-insert-post-url)
+;;               (define-key markdown-mode-map (kbd "C-c o m") 'octopress-insert-image-url)
+;;               (define-key markdown-mode-map (kbd "C-c o b") 'octopress-browse))))
 
 (use-package all-the-icons
   :ensure t)
