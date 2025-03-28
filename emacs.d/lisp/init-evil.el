@@ -17,7 +17,7 @@
     "a=" 'my-align-single-equals
     "b"  'helm-mini             ;; Switch to another buffer
     "B"  'magit-blame-toggle
-    "d"  'kill-this-buffer
+    "d"  'kill-current-buffer
     "D"  'open-current-line-in-codebase-search
     "f"  'helm-imenu            ;; Jump to function in buffer
     "g"  'magit-status
