@@ -33,6 +33,5 @@ install_packages() {
 # Call the installation function
 install_packages
 
-git clone git@github.com:NeumannM89/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 echo "alias n='nvim'" >> ~/.bashrc
