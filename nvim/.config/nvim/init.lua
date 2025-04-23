@@ -22,6 +22,8 @@ vim.opt.relativenumber = true
 vim.opt.mouse = 'a'
 
 vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
