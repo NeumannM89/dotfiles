@@ -13,7 +13,6 @@ set $mod Mod4
 
 
 exec_always --no-startup-id polybar
-exec_always --no-startup-id kanata -c /home/michael/.config/kanata/config.kbd
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -130,6 +129,7 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:toggle
+# exec_always --no-startup-id kanata -c /home/michael/.config/kanata/config.kbd
 
 
 # NOTE: This is some real tom fooliery with my keyboard layout
@@ -244,7 +244,9 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute s
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-
+bindsym $mod+Shift+f workspace 2; exec firefox
+bindsym $mod+Shift+m workspace 4; exec spotify-launcher
+bindsym $mod+Shift+t workspace 5; exec thunderbird
 # Suspend
 bindsym $mod+Shift+period exec systemctl suspend
 
