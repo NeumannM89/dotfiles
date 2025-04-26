@@ -19,7 +19,7 @@
 )
 
 (defvar 
-        hold-time 200
+        hold-time 150
         tab-time 200)
 
 (defalias sup (layer-while-held up))
@@ -57,7 +57,7 @@
   _  _    _    _    _    _    _    _    _    _    _    _    _    _
   _  S-1  S-2  S-3  S-4  S-5  S-6  S-7 S-8   S-9  S-0  _   _   _
   _  1    2    3    4    5    6    7    8    9    0    S-=    _
-  _ grv   _    _    S-\    _    \    =    -    S-.  S--    _
+  _ grv   S-grv    _    S-\    _    \    =    -    S-.  S--    _
   _ _   _           _            _ 
 )
 
