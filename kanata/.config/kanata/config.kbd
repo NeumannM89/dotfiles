@@ -19,7 +19,7 @@
 )
 
 (defvar 
-        hold-time 150
+        hold-time 200
         tab-time 200)
 
 (defalias sup (layer-while-held up))
