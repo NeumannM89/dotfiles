@@ -29,7 +29,7 @@
   lmet (multi lmet (layer-while-held up))
 )
 
-(defalias esc (tap-hold $tab-time $hold-time esc @sbrace))
+(defalias esc (tap-hold $tab-time $hold-time esc @sup))
 (defalias ent (tap-hold $tab-time $hold-time ent @lmet))
 (defalias f-mod (tap-hold $tab-time $hold-time f lmet))
 (defalias d-mod (tap-hold $tab-time $hold-time d lctl))
@@ -49,15 +49,15 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   bks  @a-mod    @s-mod    @d-mod    @f-mod    g    h    @j-mod    @k-mod    @l-mod    @;-mod    '    ret
   lshift z    x    c    v    b    n    m    ,    .    /    rshift
-  lctl lmet @esc           @up-mod            @ent 
+  lctl lmet   esc           @up-mod            @ent 
 )
 
 (deflayer up
   _
   _  _    _    _    _    _    _    _    _    _    _    _    _    _
-  _  S-1  S-2  S-3  S-4  S-5  S-6  S-7 S-8   S-9  S-0  _   _   _
+  _  S-1  S-2  S-3  S-4  S-5  S-6  S-7 S-8   S-9  S-0  =   _   _
   _  1    2    3    4    5    6    7    8    9    0    S-=    _
-  _ grv   S-grv    _    S-\    _    \    =    -    S-.  S--    _
+  _ grv   S-grv    @{    [    \    ]    @}   -    S-.  S--    _
   _ _   _           _            _ 
 )
 
