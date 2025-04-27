@@ -157,6 +157,12 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
+
+vim.lsp.enable 'qmlls'
+vim.lsp.config('qmlls', {
+  cmd = { 'qmlls6' },
+  filetypes = { 'qml' },
+})
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -183,6 +189,7 @@ require('lazy').setup({
   -- options to `gitsigns.nvim`.
   --
   -- See `:help gitsigns` to understand what the configuration keys do
+
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -464,7 +471,9 @@ require('lazy').setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          map('gh', require('telescope.builtin').lsp_definitions, '[G]oto [H]eader')
+          map('gh', function()
+            vim.cmd 'ClangdSwitchSourceHeader'
+          end, '[G]oto [H]eader')
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
@@ -602,8 +611,20 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+      --
       local servers = {
-        clangd = { filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' } },
+        clangd = {
+          capabilities = {
+            offsetEncoding = { 'utf-8', 'utf-16' },
+            textDocument = {
+              completion = {
+                editsNearCursor = true,
+              },
+            },
+          },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+        },
         cmake = {},
         ruff = {},
         pylsp = {
@@ -668,6 +689,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'clang-format',
         'clangd',
+        'codelldb',
         'cmake',
         'cmake-language-server',
         'ruff',
@@ -692,7 +714,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -938,47 +959,23 @@ require('lazy').setup({
       }
       require('mini.comment').setup {
         options = {
-          -- Function to compute custom 'commentstring' (optional)
           custom_commentstring = nil,
-
-          -- Whether to ignore blank lines when commenting
           ignore_blank_line = false,
-
-          -- Whether to ignore blank lines in actions and textobject
           start_of_line = false,
-
-          -- Whether to force single space inner padding for comment parts
           pad_comment_parts = true,
         },
 
         -- Module mappings. Use `''` (empty string) to disable one.
         mappings = {
-          -- Toggle comment (like `gcip` - comment inner paragraph) for both
-          -- Normal and Visual modes
           comment = '<leader>c',
-
-          -- Toggle comment on current line
           comment_line = '<leader>cc',
-
-          -- Toggle comment on visual selection
           comment_visual = '<leader>c',
-
-          -- Define 'comment' textobject (like `dgc` - delete whole comment block)
-          -- Works also in Visual mode if mapping differs from `comment_visual`
           textobject = 'cc',
         },
       }
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
@@ -1006,37 +1003,18 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = { 'bash', 'c', 'cpp', 'cmake', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
         enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
-  -- init.lua. If you want these files, they are in the repository, so you can just download them and
-  -- place them in the correct locations.
-
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
@@ -1075,5 +1053,8 @@ require('lazy').setup({
     },
   },
 })
+
+require('flash').toggle()
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
