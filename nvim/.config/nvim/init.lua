@@ -1,91 +1,6 @@
 -- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+require 'custom.plugins.settings'
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
-
--- [[ Setting options ]]
--- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
-
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
-
-vim.o.expandtab = true
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
-
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
-
--- Enable break indent
-vim.opt.breakindent = true
-
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 250
-
--- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
-
--- Show which line your cursor is on
-vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
-
--- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
--- instead raise a dialog asking if you wish to save the current file(s)
--- See `:help 'confirm'`
-vim.opt.confirm = true
-
-vim.opt.spelllang = 'de_20'
-vim.opt.spell = true
-
--- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
-
--- Clear highlights on search when pressing <Esc> in normal mode
---  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
@@ -171,25 +86,6 @@ require('lazy').setup({
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
-  -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-  --
-
-  -- Alternatively, use `config = function() ... end` for full control over the configuration.
-  -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
-  --
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`.
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -272,6 +168,7 @@ require('lazy').setup({
         { '<leader>j', group = '[J]ump' },
         { '<leader>g', group = '[G]it' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>f', group = '[F]ind' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -287,7 +184,7 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
+    -- branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -365,7 +262,7 @@ require('lazy').setup({
         require('telescope.builtin').find_files { hidden = true }
       end, { desc = '[f]ind [f]iles including hidden' })
 
-      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[f]ind [s]elect Telescope' })
+      vim.keymap.set('n', '<leader>ft', builtin.builtin, { desc = '[f]ind select [T]elescope' })
       vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[f]ind current [w]ord' })
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[f]ind by [g]rep' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[f]ind [d]iagnostics' })
@@ -494,11 +391,11 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>fds', require('telescope.builtin').lsp_document_symbols, '[F]ind [D]ocument [S]ymbols')
+          map('<leader>fs', require('telescope.builtin').lsp_document_symbols, '[F]ind Document [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>lws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[L]sp [W]orkspace [S]ymbols')
+          map('<leader>fS', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[F]ind dynamic Workspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -924,7 +821,7 @@ require('lazy').setup({
         -- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
         highlight_duration = 500,
 
-        -- Module mappings. Use `''` (empty string) to disable one.
+        -- Module mappings, Use `''` (empty string) to disable one
         mappings = {
           add = '<leader>sa', -- Add surrounding in Normal and Visual modes
           delete = '<leader>sd', -- Delete surrounding
@@ -942,8 +839,8 @@ require('lazy').setup({
         n_lines = 20,
 
         -- Whether to respect selection type:
-        -- - Place surroundings on separate lines in linewise mode.
-        -- - Place surroundings on each line in blockwise mode.
+        -- - Place surroundings on separate lines in linewise mode
+        -- - Place surroundings on each line in blockwise mode,
         respect_selection_type = false,
 
         -- How to search for surrounding (first inside current line, then inside
@@ -1022,11 +919,22 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {},
+    config = function()
+      require('ibl').setup()
+    end,
+  },
+
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  { import = 'custom.plugins' },
+  { import = 'custom.plugins.init' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1055,6 +963,28 @@ require('lazy').setup({
 })
 
 require('flash').toggle()
-
+local wk = require 'which-key'
+wk.add {
+  { '<leader>m', group = 'C[M]ake' }, -- group
+  {
+    -- Nested mappings are allowed and can be added in any order
+    -- Most attributes can be inherited or overridden on any level
+    -- There's no limit to the depth of nesting
+    mode = { 'n' }, -- NORMAL and VISUAL mode
+    { '<leader>mb', '<cmd>CMakeBuild -j 16<cr>', desc = 'C[M]ake [B]uild' }, -- no need to specify mode since it's inherited
+    { '<leader>mg', '<cmd>CMakeGenerate<cr>', desc = 'C[M]ake [G]enerate' },
+    { '<leader>mr', '<cmd>CMakeRun<cr>', desc = 'C[M]ake [R]un' },
+    { '<leader>mC', '<cmd>CMakeClean<cr>', desc = 'C[M]ake [C]lean' },
+    { '<leader>mcr', '<cmd>CMakeCloseRunner<cr>', desc = 'C[M]ake [C]lose [R]unner' },
+    { '<leader>mce', '<cmd>CMakeCloseExecutor<cr>', desc = 'C[M]ake [C]lose [E]executer' },
+    { '<leader>msr', '<cmd>CMakeStopRunner<cr>', desc = 'C[M]ake [S]top [R]unner' },
+    { '<leader>mse', '<cmd>CMakeStopExecutor<cr>', desc = 'C[M]ake [S]top [E]executer' },
+  },
+}
+wk.add {
+  mode = { 'n' }, -- NORMAL and VISUAL mode
+  { '<leader>w', '<cmd>w<cr>', desc = '[W]rite' },
+  { '<leader>q', '<cmd>q<cr>', desc = '[Q]uit' },
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
