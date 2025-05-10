@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 CLASS_NAME=$1
-HEADER_FILE="${CLASS_NAME}.h"
+HEADER_FILE="${CLASS_NAME}.hpp"
 SOURCE_FILE="${CLASS_NAME}.cpp"
 INCLUDE_GUARD=$(echo "${CLASS_NAME}_H" | tr '[:lower:]' '[:upper:]')
 
@@ -36,7 +36,7 @@ EOF
 
 # Create the source file
 cat << EOF > "$SOURCE_FILE"
-#include "${CLASS_NAME}.h"
+#include "${CLASS_NAME}.hpp"
 
 ${CLASS_NAME}::${CLASS_NAME}(QObject *parent)
     : QObject(parent)

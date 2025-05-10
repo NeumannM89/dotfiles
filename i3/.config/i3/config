@@ -128,7 +128,8 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
-exec_always --no-startup-id setxkbmap -layout us,de -option grp:toggle
+exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_shift_toggle
+
 # exec_always --no-startup-id kanata -c /home/michael/.config/kanata/config.kbd
 
 
