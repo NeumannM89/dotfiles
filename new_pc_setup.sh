@@ -4,7 +4,8 @@
 #https://github.com/ryanoasis/nerd-fonts?tab=readme-ov-file#option-7-install-script for ubuntu
 
 # Packages to install
-PACKAGES=("stow" "make" "gcc" "ripgrep" "unzip" "xclip" "git" "neovim" "curl" "tmux" "nodejsl" "npm" "fzf" "noto-fonts" "i3-wm" "i3lock" "polybar" "i3blocks" "dmenu" "dunst" "alacritty")
+PACKAGES=("stow" "make" "gcc" "ripgrep" "unzip" "xclip" "git" "neovim" "curl" "tmux" "nodejsl" "npm" "fzf" "noto-fonts" "i3-wm" "i3lock" "polybar" "i3blocks" "dmenu" "dunst" "kitty" "ttf-noto-nerd" "ttf-font-awesome" "ttf-nerd-fonts-symbols")
+# PACKAGES=("stow" "make" "gcc" "ripgrep" "unzip" "xclip" "git" "neovim" "curl" "tmux" "nodejsl" "npm" "fzf" "noto-fonts" "i3-wm" "i3lock" "polybar" "i3blocks" "dmenu" "dunst" "kitty" "ttf-noto-nerd")
 
 # Function to install package
 install_package() {
