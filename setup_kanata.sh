@@ -1,9 +1,9 @@
 #!/bin/bash
 
 mkdir $HOME/aur-packages/
-git clone https://aur.archlinux.org/kanata.git $HOME/aur-packages/
+git clone https://aur.archlinux.org/kanata.git $HOME/aur-packages/kanata
 cd $HOME/aur-packages/kanata/
-makepkg --install
+makepkg -s --install
 
 sudo groupadd uinput
 sudo usermod -aG input $USER
