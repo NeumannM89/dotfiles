@@ -23,7 +23,6 @@
         tab-time 200)
 
 (defalias sup (layer-while-held up))
-(defalias sbrace(layer-while-held brace))
 
 (defalias
   lmet (multi lmet (layer-while-held up))
@@ -31,15 +30,15 @@
 
 (defalias esc (tap-hold $tab-time $hold-time esc @sup))
 (defalias ent (tap-hold $tab-time $hold-time ent @lmet))
-(defalias f-mod (tap-hold $tab-time $hold-time f lmet))
-(defalias d-mod (tap-hold $tab-time $hold-time d lctl))
-(defalias s-mod (tap-hold $tab-time $hold-time s lshift))
-(defalias a-mod (tap-hold $tab-time $hold-time a lalt))
+(defalias f-mod (tap-hold-release $tab-time $hold-time f lmet))
+(defalias d-mod (tap-hold-release $tab-time $hold-time d lctl))
+(defalias s-mod (tap-hold-release $tab-time $hold-time s lshift))
+(defalias a-mod (tap-hold-release $tab-time $hold-time a lalt))
 
-(defalias j-mod (tap-hold $tab-time $hold-time j rmet))
-(defalias k-mod (tap-hold $tab-time $hold-time k rctl))
-(defalias l-mod (tap-hold $tab-time $hold-time l rshift))
-(defalias ;-mod (tap-hold $tab-time $hold-time ; ralt))
+(defalias j-mod (tap-hold-release $tab-time $hold-time j rmet))
+(defalias k-mod (tap-hold-release $tab-time $hold-time k rctl))
+(defalias l-mod (tap-hold-release $tab-time $hold-time l rshift))
+(defalias ;-mod (tap-hold-release $tab-time $hold-time ; ralt))
 (defalias up-mod (tap-hold $tab-time $hold-time spc @sup))
 
 
@@ -54,18 +53,10 @@
 
 (deflayer up
   _
-  _  _    _    _    _    _    _    _    _    _    _    _    _    _
-  _  S-1  S-2  S-3  S-4  S-5  S-6  S-7 S-8   S-9  S-0  =   _   _
-  _  1    2    3    4    5    6    7    8    9    0    S-=    _
-  _ grv   S-grv    @{    [    \    ]    @}   -    S-.  S--    _
-  _ _   _           _            _ 
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    -    7    8    9    0    _    _    _    _    _    _    _    _
+  _    =    4    5    6    [    ]    lmet    rctl    rshift    ralt    _   _
+  _    grv    1    2    3    _    _    -    S-.    _    _    _
+  _    _   _           _            _ 
 )
 
-(deflayer brace
-  _
-  _  _    _    _    _    _    _    _    _    _    _    _    _    _
-  _  _    _    _    _    _    _    _    _    _    _    _    _    _
-  _  _    @{   [    S-9    _    _    S-0     ]    @}    _    _    _
-  _ _    _    _    _    _    _    _    _    _    _    _
-  _ _ _           _            _ 
-)
